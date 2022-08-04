@@ -1,5 +1,6 @@
 import requests
 import os
+import schedule
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -10,14 +11,12 @@ import gspread
 import datetime
 import time
 
-from dotenv import load_dotenv
-load_dotenv()
-
 service = Service(os.environ.get('CHROMEDRIVER_PATH'))
 chrome_options = Options()
-# chrome_options.add_argument("--headless")
-# chrome_options.add_argument("--no-sandbox")
-# chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 
@@ -38,11 +37,15 @@ def parse():
     return result
 
 def output(info):
-    driver.close()
     gc = gspread.service_account(filename="creds.json")
     sh = gc.open("RSF Crowd Meter Data").sheet1
     sh.append_row([str(info['Date']), str(info['Crowd'])])
 
+def execute():
+    info = parse()
+    output(info)
 
-info = parse()
-output(info)
+schedule.every().minute.at(':00').do(execute)
+while True:
+    schedule.run_pending()
+    time.sleep(.1)
