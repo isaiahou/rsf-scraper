@@ -13,9 +13,10 @@ def request():
 
 def parse(soup):
     date = datetime.datetime.now()
-    div = soup.find(
-        "div", class_="styles_main__3Ul1n styles_sidebarOpen__1t7th")
-    crowd = div.span.text
+    print(soup)
+    div = soup.find("div", class_ = "styles_fullness__rayxl")
+    print(div)
+    crowd = div
     result = {'Date': date, "Crowd": crowd}
     return result
 
@@ -23,7 +24,6 @@ def parse(soup):
 # sh = gc.open("RSF Crowd Meter Data").sheet1
 
 # sh.append_row()
-
 
 data = request()
 product = parse(data)
