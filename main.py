@@ -49,9 +49,9 @@ def execute():
     output(info)
 
 
-schedule.every().day.at("7:00").do(execute)
-schedule.every().day.at("8:00").do(execute)
-schedule.every().day.at("9:00").do(execute)
+schedule.every().day.at("07:00").do(execute)
+schedule.every().day.at("08:00").do(execute)
+schedule.every().day.at("09:00").do(execute)
 schedule.every().day.at("10:00").do(execute)
 schedule.every().day.at("11:00").do(execute)
 schedule.every().day.at("12:00").do(execute)
