@@ -1,15 +1,16 @@
 import requests
 import os
 import schedule
+import gspread
+import datetime
+import time
+import pytz
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import gspread
-import datetime
-import time
 
 service = Service(os.environ.get('CHROMEDRIVER_PATH'))
 chrome_options = Options()
@@ -21,7 +22,7 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 
 
 def parse():
-    date = datetime.datetime.now()
+    date = datetime.datetime.now(pytz.timezone('America/Los_Angeles'))
     url = "https://safe.density.io/#/displays/dsp_956223069054042646?token=shr_o69HxjQ0BYrY2FPD9HxdirhJYcFDCeRolEd744Uj88e"
     driver.get(url)
     attempts = 0
