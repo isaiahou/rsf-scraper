@@ -2,20 +2,23 @@ import requests
 from bs4 import BeautifulSoup
 import gspread
 import datetime
+import time
 
+url = "https://recsports.berkeley.edu/rsf-weight-room-crowd-meter/"
 
 def request():
-    source = requests.get(
-        "https://recsports.berkeley.edu/rsf-weight-room-crowd-meter/")
-    soup = BeautifulSoup(source.content, "html.parser")
+    source = requests.get(url, "html.parser")
+    soup = BeautifulSoup(source, "lxml")
     return soup
 
 
 def parse(soup):
     date = datetime.datetime.now()
-    print(soup)
-    div = soup.find("div", class_ = "styles_fullness__rayxl")
-    print(div)
+    div = soup.find_all("div",  string="% Full")
+    # for item in div:
+    #     x = item.find('span')
+    #     if x:
+    #         print(x.text.strip())
     crowd = div
     result = {'Date': date, "Crowd": crowd}
     return result
@@ -25,6 +28,8 @@ def parse(soup):
 
 # sh.append_row()
 
+
 data = request()
 product = parse(data)
 print(product)
+driver.close()
