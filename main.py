@@ -27,7 +27,8 @@ def parse():
     attempts = 0
     while attempts < 3:
         try:
-            element = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[1]/div/div/div[1]/div[2]/div/span"))).text.removesuffix("% Full")
+            element = WebDriverWait(driver, 20).until(EC.visibility_of_element_located(
+                (By.XPATH, "/html/body/div[1]/div/div/div[1]/div[2]/div/span"))).text.removesuffix("% Full")
             result = {'Date': date, "Crowd": element}
             return result
         except:
@@ -36,16 +37,33 @@ def parse():
             result = {'Date': date, "Crowd": element}
     return result
 
+
 def output(info):
     gc = gspread.service_account(filename="creds.json")
     sh = gc.open("RSF Crowd Meter Data").sheet1
     sh.append_row([str(info['Date']), str(info['Crowd'])])
 
+
 def execute():
     info = parse()
     output(info)
 
-schedule.every().minute.at(':00').do(execute)
+
+schedule.every().day.at("7:00").do(execute)
+schedule.every().day.at("8:00").do(execute)
+schedule.every().day.at("9:00").do(execute)
+schedule.every().day.at("10:00").do(execute)
+schedule.every().day.at("11:00").do(execute)
+schedule.every().day.at("12:00").do(execute)
+schedule.every().day.at("13:00").do(execute)
+schedule.every().day.at("15:00").do(execute)
+schedule.every().day.at("16:00").do(execute)
+schedule.every().day.at("17:00").do(execute)
+schedule.every().day.at("18:00").do(execute)
+schedule.every().day.at("19:00").do(execute)
+schedule.every().day.at("20:00").do(execute)
+schedule.every().day.at("21:00").do(execute)
+schedule.every().day.at("22:00").do(execute)
 while True:
     schedule.run_pending()
     time.sleep(.1)
