@@ -28,25 +28,29 @@ def parse(date):
         try:
             element = WebDriverWait(driver, 20).until(EC.visibility_of_element_located(
                 (By.XPATH, "/html/body/div[1]/div/div/div[1]/div[2]/div/span"))).text.removesuffix("% Full")
-            result = {"Month": date.strftime("%B"), "Day": date.strftime("%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
+            result = {"Month": date.strftime("%B"), "Day": date.strftime(
+                "%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
             return result
         except:
             attempts += 1
-            element = "There was an error"
-            result = {"Month": date.strftime("%B"), "Day": date.strftime("%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
+            element = "Error"
+            result = {"Month": date.strftime("%B"), "Day": date.strftime(
+                "%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
     return result
+
 
 def valid_time(date):
     timestamp = date.time()
     start = datetime.time(7)
-    end = datetime.time(22)
+    end = datetime.time(23)
     return (start <= timestamp <= end)
 
 
 def output(info):
     gc = gspread.service_account(filename="creds.json")
     sh = gc.open("RSF Crowd Meter Data").sheet1
-    sh.append_row([str(info['Month']), str(info['Day']), str(info['Time']), str(info['Crowd'])])
+    sh.append_row([str(info['Month']), str(info['Day']),
+                  str(info['Time']), str(info['Crowd'])])
 
 
 def execute():
@@ -54,6 +58,7 @@ def execute():
     if valid_time(date):
         info = parse(date)
         output(info)
+
 
 schedule.every().hour.at(":00").do(execute)
 schedule.every().hour.at(":30").do(execute)
