@@ -28,22 +28,31 @@ def parse(date):
         try:
             element = WebDriverWait(driver, 20).until(EC.visibility_of_element_located(
                 (By.XPATH, "/html/body/div[1]/div/div/div[1]/div[2]/div/span"))).text.removesuffix("% Full")
-            result = {"Month": date.strftime("%B"), "Day": date.strftime(
+            result = {"Timestamp": date, "Month": date.strftime("%B"), "Day": date.strftime(
                 "%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
             return result
         except:
             attempts += 1
             element = "Error"
-            result = {"Month": date.strftime("%B"), "Day": date.strftime(
+            result = {"Timestamp": date, "Month": date.strftime("%B"), "Day": date.strftime(
                 "%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
     return result
 
 
-def valid_time(date):
+def valid_time(date, weekday):
     timestamp = date.time()
     start = datetime.time(7)
-    end = datetime.time(23)
-    return (start <= timestamp <= end)
+    end = datetime.time(23, 1)
+    start_sat = datetime.time(8)
+    end_sat = datetime.time(18, 1)
+    start_sun = datetime.time(8)
+    end_sun = datetime.time(22, 1)
+    if weekday in range(5):
+        return (start <= timestamp <= end)
+    elif weekday == 5:
+        return (start_sat <= timestamp <= end_sat)
+    else:
+        return (start_sun <= timestamp <= end_sun)
 
 
 def output(info):
@@ -55,7 +64,8 @@ def output(info):
 
 def execute():
     date = datetime.datetime.now(pytz.timezone('America/Los_Angeles'))
-    if valid_time(date):
+    weekday = date.weekday()
+    if valid_time(date, weekday):
         info = parse(date)
         output(info)
 
