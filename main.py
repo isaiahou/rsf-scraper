@@ -27,13 +27,13 @@ def parse(date):
         try:
             element = WebDriverWait(driver, 20).until(EC.visibility_of_element_located(
                 (By.XPATH, "/html/body/div[1]/div/div/div[1]/div[2]/div/span"))).text.removesuffix("% Full")
-            result = {"Timestamp": date, "Month": date.strftime("%B"), "Day": date.strftime(
+            result = {"TimeStamp": date, "Month": date.strftime("%B"), "Day": date.strftime(
                 "%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
             return result
         except:
             attempts += 1
             element = "Error"
-            result = {"Timestamp": date, "Month": date.strftime("%B"), "Day": date.strftime(
+            result = {"TimeStamp": date, "Month": date.strftime("%B"), "Day": date.strftime(
                 "%A"), "Time": date.strftime("%I:%M %p"), "Crowd": element}
     return result
 
@@ -55,7 +55,7 @@ def valid_time(date, weekday):
 def output(info):
     gc = gspread.service_account(filename="creds.json")
     sh = gc.open("RSF Crowd Meter Data").sheet1
-    sh.append_row([str(info['Month']), str(info['Day']),
+    sh.append_row([str(info['TimeStamp']), str(info['Month']), str(info['Day']),
                   str(info['Time']), str(info['Crowd'])])
 
 def execute():
