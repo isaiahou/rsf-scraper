@@ -70,7 +70,6 @@ def execute():
         output(info)
 
 
-
 schedule.every().hour.at(":00").do(execute)
 schedule.every().hour.at(":30").do(execute)
 while True:
